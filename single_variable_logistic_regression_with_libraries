@@ -1,0 +1,59 @@
+import numpy as np
+import matplotlib.pyplot as plt  # To visualize
+import pandas as pd  # To read data
+from sklearn.linear_model import LinearRegression
+import sklearn.metrics
+import statsmodels.api as sm
+
+# 1) Input
+
+data = pd.read_csv('data.csv', sep = ';')
+x = np.array(data['SAT'])
+y = np.array(data['GPA'])
+x = x.reshape((-1, 1))
+
+# 2) Output
+
+# 2.0) Create Linear Regression (y = bo + b1 * x + e)
+
+linear_regression = LinearRegression()  # create object for the class
+
+# 2.1) Perform linear regression
+
+linear_regression.fit(x, y)  # perform linear regression
+
+# 2.2) Determine coefficients bo and b1
+
+b0 = linear_regression.intercept_
+b1 = linear_regression.coef_
+
+# 2.3) Determine R²
+
+R_squared = linear_regression.score(x, y)
+
+# 2.4) Summary table
+
+summary_table = sm.OLS(y, sm.add_constant(x)).fit().summary()
+
+# 2.5) Make predictions for y
+
+y_prediction = linear_regression.predict(x)
+
+# 2.6) Assessing the Accuracy of the Model
+
+meanSquaredError = sklearn.metrics.mean_squared_error(y, y_prediction)
+
+# 3) Plotting
+
+plt.scatter(x, y)
+plt.plot(x, y_prediction, color = 'red')
+plt.show()
+
+# 4) Results
+
+print('bo = ', b0)
+print('b1 = ', b1)
+print('R² = ', R_squared)
+print('Mean squared error = ', meanSquaredError)
+print('y_prediction = ', y_prediction)
+print(summary_table)
