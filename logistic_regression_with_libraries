@@ -1,0 +1,57 @@
+import numpy as np
+import matplotlib.pyplot as plt  # To visualize
+import pandas as pd  # To read data
+import seaborn as sns
+import sklearn.metrics
+import statsmodels.api as sm
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+
+# Input
+
+data = pd.read_csv('SAT.csv', sep = ',')
+x = data[['SAT']]
+y = data['Admitted']
+train_size = 0.7 # how much data from x will x_train have 
+
+# Define train and test data
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=train_size, random_state=2811)
+
+# Output
+
+# Create Logistic Regression
+
+logistic_regression = LogisticRegression()
+
+# Perform logistic regression
+
+logistic_regression.fit(x_train, y_train) 
+
+# Model coefficients
+
+b0 = logistic_regression.intercept_
+b1 = logistic_regression.coef_
+ 
+# Make predictions for y
+
+y_prediction = logistic_regression.predict(x_test)
+y_probability_prediction = logistic_regression.predict_proba(x_test)
+
+# Model accuracy
+
+model_accuracy = metrics.accuracy_score(y_test, y_prediction)
+
+# Plot figures
+
+fig, ax = plt.subplots(figsize=(22,6))
+sns.scatterplot(x = data['SAT'], y = data['Admitted'])
+ax.set_title('Scatter plot of raw data', fontsize=18)
+ax.set_xlabel('x', fontsize=14)
+ax.set_ylabel('y', fontsize=14)
+
+# Results
+
+print('model_accuracy = ', model_accuracy)
