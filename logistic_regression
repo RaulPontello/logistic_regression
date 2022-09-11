@@ -1,13 +1,7 @@
-import numpy as np
-import matplotlib.pyplot as plt  # To visualize
 import pandas as pd  # To read data
-import seaborn as sns
 import sklearn.metrics
-import statsmodels.api as sm
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn import metrics
 
 # Input
 
@@ -24,7 +18,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=train_size,
 
 # Create Logistic Regression
 
-logistic_regression = LogisticRegression()
+logistic_regression = LogisticRegression(solver='liblinear', random_state=0)
 
 # Perform logistic regression
 
@@ -40,18 +34,14 @@ b1 = logistic_regression.coef_
 y_prediction = logistic_regression.predict(x_test)
 y_probability_prediction = logistic_regression.predict_proba(x_test)
 
-# Model accuracy
+# Model metrics
 
-model_accuracy = metrics.accuracy_score(y_test, y_prediction)
-
-# Plot figures
-
-fig, ax = plt.subplots(figsize=(22,6))
-sns.scatterplot(x = data['SAT'], y = data['Admitted'])
-ax.set_title('Scatter plot of raw data', fontsize=18)
-ax.set_xlabel('x', fontsize=14)
-ax.set_ylabel('y', fontsize=14)
+model_score = logistic_regression.score(x_test, y_test)
 
 # Results
 
-print('model_accuracy = ', model_accuracy)
+print('b0 = ', b0)
+print('b1 = ', b1)
+print('y_prediction = ', y_prediction)
+print('y_probability_prediction = ', y_probability_prediction)
+print('mmodel_score = ', model_score)
