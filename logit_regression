@@ -5,37 +5,42 @@ from sklearn.model_selection import train_test_split
 # Input
 
 data = pd.read_csv('data.csv', sep = ',')
-x = data[['SAT']]
+x = data[['SAT', 'Gender']]
 y = data['Admitted']
-train_size = 0.7 # how much data from x will x_train have 
 
 # Define train and test data
-
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=train_size, random_state=2811)
 
 # Output
 
 # Create Logistic Regression
 
-logistic_regression = LogisticRegression(solver='liblinear', random_state=0)
+logit_regression = sm.Logit(y, x)
 
 # Perform logistic regression
 
-logistic_regression.fit(x_train, y_train) 
+logit_regression = logit_regression.fit(method='newton')
 
 # Model coefficients
 
-b0 = logistic_regression.intercept_
-b1 = logistic_regression.coef_
- 
+parameters = logit_regression.params
+b0 = parameters[0]
+b1 = parameters[1]
+
 # Make predictions for y
 
-y_prediction = logistic_regression.predict(x_test)
-y_probability_prediction = logistic_regression.predict_proba(x_test)
+y_probability_prediction = logit_regression.predict(x)
+y_prediction = (logit_regression.predict(x) >= 0.5).astype(int)
 
 # Model metrics
 
-model_score = logistic_regression.score(x_test, y_test)
+confusion_matrix = pd.DataFrame(logit_regression.pred_table())
+confusion_matrix.columns = ['Predicted 0', 'Predicted 1']
+confusion_matrix = confusion_matrix.rename(index = {0: 'Actual 0', 1: 'Actual 1'})
+model_accuracy = (confusion_matrix['Predicted 0'].loc['Actual 0'] + confusion_matrix['Predicted 1'].loc['Actual 1'])/confusion_matrix.values.sum()
+
+# Summary table
+
+summary_table = logit_regression.summary()
 
 # Results
 
@@ -43,4 +48,6 @@ print('b0 = ', b0)
 print('b1 = ', b1)
 print('y_prediction = ', y_prediction)
 print('y_probability_prediction = ', y_probability_prediction)
-print('mmodel_score = ', model_score)
+print('confusion_matrix = ', confusion_matrix)
+print('model_accuracy = ', model_accuracy)
+print('summary_table = ', summary_table)
