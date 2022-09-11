@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 
 # Input
 
-data = pd.read_csv('SAT.csv', sep = ',')
+data = pd.read_csv('data.csv', sep = ',')
 x = data[['SAT']]
 y = data['Admitted']
 train_size = 0.7 # how much data from x will x_train have 
